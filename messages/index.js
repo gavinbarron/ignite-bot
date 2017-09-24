@@ -43,8 +43,7 @@ bot.library(qnaMakerTools.createLibrary());
 // Override to also include the knowledgebase question with the answer on confident matches
 basicQnAMakerDialog.respondFromQnAMakerResult = function(session, qnaMakerResult){
 	var result = qnaMakerResult;
-	var response = 'Here is the match from FAQ:  \r\n  Q: ' + result.answers[0].questions[0] + '  \r\n A: ' + result.answers[0].answer;
-	session.send(response);
+	session.send(result.answers[0].answer);
 };
 
 // Override to log user query and matched Q&A before ending the dialog
