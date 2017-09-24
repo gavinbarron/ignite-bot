@@ -5,12 +5,12 @@ var builder = require("botbuilder");
 var botbuilder_azure = require("botbuilder-azure");
 var builder_cognitiveservices = require("botbuilder-cognitiveservices");
 var path = require('path');
-const appInsights = require("applicationinsights");
 var useEmulator = (process.env.NODE_ENV == 'development');
-if (useEmulator) {
+const appInsights = require("applicationinsights");
+
     appInsights.setup().start();
-}
-const client = appInsights.defaultClient;
+
+let client = appInsights.defaultClient;
 
 var connector = useEmulator ? new builder.ChatConnector() : new botbuilder_azure.BotServiceConnector({
     appId: process.env['MicrosoftAppId'],
