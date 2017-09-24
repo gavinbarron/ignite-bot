@@ -11,7 +11,6 @@ if (useEmulator) {
     appInsights.setup().start();
 }
 const client = appInsights.defaultClient;
-client.config.endpointUrl = "https://dc.services.visualstudio.com/v2/track";
 
 var connector = useEmulator ? new builder.ChatConnector() : new botbuilder_azure.BotServiceConnector({
     appId: process.env['MicrosoftAppId'],
