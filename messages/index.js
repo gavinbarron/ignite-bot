@@ -6,9 +6,12 @@ var botbuilder_azure = require("botbuilder-azure");
 var builder_cognitiveservices = require("botbuilder-cognitiveservices");
 var path = require('path');
 const appInsights = require("applicationinsights");
+const useEmulator = (process.env.NODE_ENV == 'development');
+if (useEmulator) {
+    appInsights.setup().start();
+}
 const client = appInsights.defaultClient;
 client.config.endpointUrl = "https://dc.services.visualstudio.com/v2/track";
-var useEmulator = (process.env.NODE_ENV == 'development');
 
 var connector = useEmulator ? new builder.ChatConnector() : new botbuilder_azure.BotServiceConnector({
     appId: process.env['MicrosoftAppId'],
@@ -48,6 +51,7 @@ basicQnAMakerDialog.respondFromQnAMakerResult = function(session, qnaMakerResult
 // Override to log user query and matched Q&A before ending the dialog
 basicQnAMakerDialog.defaultWaitNextMessage = function(session, qnaMakerResult){
     if(session.privateConversationData.qnaFeedbackUserQuestion != null) {
+
         if(qnaMakerResult.answers != null && qnaMakerResult.answers.length > 0
 		&& qnaMakerResult.answers[0].questions != null && qnaMakerResult.answers[0].questions.length > 0 && qnaMakerResult.answers[0].answer != null){
             console.log('User Query: ' + session.privateConversationData.qnaFeedbackUserQuestion);
