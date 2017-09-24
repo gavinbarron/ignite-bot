@@ -5,9 +5,7 @@ var builder = require("botbuilder");
 var botbuilder_azure = require("botbuilder-azure");
 var builder_cognitiveservices = require("botbuilder-cognitiveservices");
 var path = require('path');
-const appInsights = require("applicationinsights");
-const client = appInsights.defaultClient;
-client.config.endpointUrl = "https://dc.services.visualstudio.com/v2/track";
+
 var useEmulator = (process.env.NODE_ENV == 'development');
 
 var connector = useEmulator ? new builder.ChatConnector() : new botbuilder_azure.BotServiceConnector({
@@ -26,39 +24,13 @@ bot.localePath(path.join(__dirname, './locale'));
 
 var recognizer = new builder_cognitiveservices.QnAMakerRecognizer({
                 knowledgeBaseId: process.env.QnAKnowledgebaseId,
-                subscriptionKey: process.env.QnASubscriptionKey,
-                top: 4});
+    subscriptionKey: process.env.QnASubscriptionKey});
 
 var basicQnAMakerDialog = new builder_cognitiveservices.QnAMakerDialog({
     recognizers: [recognizer],
                 defaultMessage: 'Sorry, I\'m a bot and I\'m still learning.',
-                qnaThreshold: 0.3,
-                feedbackLib: qnaMakerTools}
+                qnaThreshold: 0.3}
 );
-
-var qnaMakerTools = new builder_cognitiveservices.QnAMakerTools();
-bot.library(qnaMakerTools.createLibrary());
-
-// Override to also include the knowledgebase question with the answer on confident matches
-basicQnAMakerDialog.respondFromQnAMakerResult = function(session, qnaMakerResult){
-	var result = qnaMakerResult;
-	session.send(result.answers[0].answer);
-};
-
-// Override to log user query and matched Q&A before ending the dialog
-basicQnAMakerDialog.defaultWaitNextMessage = function(session, qnaMakerResult){
-    if(session.privateConversationData.qnaFeedbackUserQuestion != null) {
-        console.log('User Query: ' + session.privateConversationData.qnaFeedbackUserQuestion);
-        client.trackEvent({name: 'bot-question-asked', properties: {qnaQuestion: session.privateConversationData.qnaFeedbackUserQuestion}});
-
-        if(qnaMakerResult.answers != null && qnaMakerResult.answers.length > 0
-		&& qnaMakerResult.answers[0].questions != null && qnaMakerResult.answers[0].questions.length > 0 && qnaMakerResult.answers[0].answer != null){
-			console.log('KB Question: ' + qnaMakerResult.answers[0].questions[0]);
-            console.log('KB Answer: ' + qnaMakerResult.answers[0].answer);
-        }
-    }
-	session.endDialog();
-};
 
 bot.dialog('qna', basicQnAMakerDialog);
 
@@ -70,5 +42,5 @@ if (useEmulator) {
     });
     server.post('/api/messages', connector.listen());
 } else {
-    module.exports = { default: connector.listen() };
+    module.exports = { default: connector.listen() }
 }
