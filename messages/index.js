@@ -71,5 +71,5 @@ if (useEmulator) {
     });
     server.post('/api/messages', connector.listen());
 } else {
-    module.exports = { default: connector.listen() }
+    module.exports = { default: connector.listen() };
 }
