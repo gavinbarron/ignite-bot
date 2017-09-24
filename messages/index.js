@@ -7,8 +7,9 @@ var builder_cognitiveservices = require("botbuilder-cognitiveservices");
 var path = require('path');
 const appInsights = require("applicationinsights");
 const client = appInsights.defaultClient;
+client.config.endpointUrl = "https://dc.services.visualstudio.com/v2/track";
+var useEmulator = (process.env.NODE_ENV == 'development');
 
-const useEmulator = (process.env.NODE_ENV == 'development');
 var connector = useEmulator ? new builder.ChatConnector() : new botbuilder_azure.BotServiceConnector({
     appId: process.env['MicrosoftAppId'],
     appPassword: process.env['MicrosoftAppPassword'],
