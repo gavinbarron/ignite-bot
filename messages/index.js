@@ -6,7 +6,6 @@ var botbuilder_azure = require("botbuilder-azure");
 var builder_cognitiveservices = require("botbuilder-cognitiveservices");
 var path = require('path');
 const appInsights = require("applicationinsights");
-appInsights.setup().start(); // assuming ikey in env var
 const client = appInsights.defaultClient;
 client.config.endpointUrl = "https://dc.services.visualstudio.com/v2/track";
 var useEmulator = (process.env.NODE_ENV == 'development');
