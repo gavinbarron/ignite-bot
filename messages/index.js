@@ -48,13 +48,16 @@ basicQnAMakerDialog.respondFromQnAMakerResult = function(session, qnaMakerResult
 // Override to log user query and matched Q&A before ending the dialog
 basicQnAMakerDialog.defaultWaitNextMessage = function(session, qnaMakerResult){
     if(session.privateConversationData.qnaFeedbackUserQuestion != null) {
-        console.log('User Query: ' + session.privateConversationData.qnaFeedbackUserQuestion);
-        client.trackEvent({name: 'bot-question-asked', properties: {qnaQuestion: session.privateConversationData.qnaFeedbackUserQuestion}});
-
         if(qnaMakerResult.answers != null && qnaMakerResult.answers.length > 0
 		&& qnaMakerResult.answers[0].questions != null && qnaMakerResult.answers[0].questions.length > 0 && qnaMakerResult.answers[0].answer != null){
+            console.log('User Query: ' + session.privateConversationData.qnaFeedbackUserQuestion);
+            client.trackEvent({name: 'bot-question-asked-with-answer', properties: {qnaQuestion: session.privateConversationData.qnaFeedbackUserQuestion}});
 			console.log('KB Question: ' + qnaMakerResult.answers[0].questions[0]);
             console.log('KB Answer: ' + qnaMakerResult.answers[0].answer);
+        }
+        else {
+            console.log('Failed User Query: ' + session.privateConversationData.qnaFeedbackUserQuestion);
+            client.trackEvent({name: 'bot-question-asked-no-answer', properties: {qnaQuestion: session.privateConversationData.qnaFeedbackUserQuestion}});
         }
     }
 	session.endDialog();
