@@ -54,8 +54,9 @@ basicQnAMakerDialog.respondFromQnAMakerResult = function(session, qnaMakerResult
 basicQnAMakerDialog.defaultWaitNextMessage = function(session, qnaMakerResult){
     if(session.privateConversationData.qnaFeedbackUserQuestion != null) {
 
-        if(qnaMakerResult.answers != null && qnaMakerResult.answers.length > 0
-		&& qnaMakerResult.answers[0].questions != null && qnaMakerResult.answers[0].questions.length > 0 && qnaMakerResult.answers[0].answer != null){
+        if(qnaMakerResult.answer && qnaMakerResult.answers.length > 0
+        && qnaMakerResult.answers[0].questions && qnaMakerResult.answers[0].questions.length > 0
+        && qnaMakerResult.answers[0].answer && qnaMakerResult.answers[0].answer.length > 0) {
             console.log('User Query: ' + session.privateConversationData.qnaFeedbackUserQuestion);
             client.trackEvent({name: 'bot-question-asked-with-answer', properties: {qnaQuestion: session.privateConversationData.qnaFeedbackUserQuestion}});
 			console.log('KB Question: ' + qnaMakerResult.answers[0].questions[0]);
