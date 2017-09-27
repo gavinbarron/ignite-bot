@@ -52,11 +52,11 @@ basicQnAMakerDialog.respondFromQnAMakerResult = function(session, qnaMakerResult
 
 // Override to log user query and matched Q&A before ending the dialog
 basicQnAMakerDialog.defaultWaitNextMessage = function(session, qnaMakerResult){
-    if(session.privateConversationData.qnaFeedbackUserQuestion != null) {
+    if(session.privateConversationData.qnaFeedbackUserQuestion) {
 
-        if(qnaMakerResult.answer && qnaMakerResult.answers.length > 0
-        && qnaMakerResult.answers[0].questions && qnaMakerResult.answers[0].questions.length > 0
-        && qnaMakerResult.answers[0].answer && qnaMakerResult.answers[0].answer.length > 0) {
+        if(qnaMakerResult.answer != null && qnaMakerResult.answers.length > 0
+        && qnaMakerResult.answers[0].questions != null && qnaMakerResult.answers[0].questions.length > 0
+        && qnaMakerResult.answers[0].answer != null && qnaMakerResult.answers[0].answer.length > 0) {
             console.log('User Query: ' + session.privateConversationData.qnaFeedbackUserQuestion);
             client.trackEvent({name: 'bot-question-asked-with-answer', properties: {qnaQuestion: session.privateConversationData.qnaFeedbackUserQuestion}});
 			console.log('KB Question: ' + qnaMakerResult.answers[0].questions[0]);
